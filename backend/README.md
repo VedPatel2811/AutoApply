@@ -69,11 +69,13 @@ backend/
 ### Installation
 
 1. **Navigate to backend directory:**
+
    ```bash
    cd backend
    ```
 
 2. **Create and activate virtual environment:**
+
    ```bash
    python -m venv .venv
    # On Windows:
