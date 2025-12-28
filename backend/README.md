@@ -132,6 +132,15 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 The API will be available at: http://localhost:8000
 
+### Testing Job Search
+
+Once the server is running, you can test the job search functionality:
+
+```bash
+# Example: Search for software engineer jobs
+http://localhost:8000/api/v1/jobs/search?query=software%20engineer&location=New%20York
+```
+
 ### API Documentation
 
 - **Swagger UI**: http://localhost:8000/docs
@@ -153,7 +162,9 @@ celery -A app.tasks.celery_app worker --loglevel=info
 ### Current Endpoints
 
 - `GET /` - Health check
-- `POST /api/v1/resume` - Upload and extract text from PDF resume
+- `POST /api/v1/resume/upload` - Upload and extract text from PDF resume
+- `GET /api/v1/jobs/search` - Search for jobs using JobSpy
+  - Parameters: `query` (job title), `location`, `sites` (optional), `results` (optional)
 
 ### Planned Endpoints
 

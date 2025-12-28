@@ -169,10 +169,6 @@ backend/
 ## 🔧 Key Configuration Files
 
 ### Root `.env.example`
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```env
 # Application
 APP_NAME=JobAutoApply
@@ -221,10 +217,6 @@ INDEED_PASSWORD=
 ```
 
 ### `backend/requirements.txt`
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```txt
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
@@ -275,10 +267,6 @@ tenacity==8.2.3  # Retry logic
 ```
 
 ### `frontend/package.json` (key dependencies)
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```json
 {
   "dependencies": {
@@ -344,10 +332,6 @@ tenacity==8.2.3  # Retry logic
 ## 🚀 Setup Instructions
 
 ### Prerequisites
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```bash
 # Python 3.10+
 # Node.js 18+
@@ -357,10 +341,6 @@ tenacity==8.2.3  # Retry logic
 ```
 
 ### Backend Setup
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```bash
 cd backend
 python -m venv venv
@@ -372,10 +352,6 @@ uvicorn app.main:app --reload --port 8000
 ```
 
 ### Frontend Setup
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```bash
 cd frontend
 npm install
@@ -385,29 +361,17 @@ npm start
 ```
 
 ### Database Setup (MongoDB)
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```bash
 # Install MongoDB locally or use Docker
 docker run -d -p 27017:27017 --name mongodb mongo:latest
 ```
 
 ### Redis Setup (for Celery)
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```bash
 docker run -d -p 6379:6379 --name redis redis:latest
 ```
 
 ### Celery Worker
-<<<<<<< HEAD
-
-=======
->>>>>>> a1a3804689f12883a490743b3bc2b63cc37dcd8e
 ```bash
 cd backend
 celery -A app.tasks.celery_app worker --loglevel=info
