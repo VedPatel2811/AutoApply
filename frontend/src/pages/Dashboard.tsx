@@ -1,18 +1,12 @@
-import { ArrowUpRight, Clock, Send, CheckCircle2 } from 'lucide-react';
+
+import { ArrowUpRight } from 'lucide-react';
+import { useAppSelector } from '../store/hooks';
+import { StatCard } from '../components/ui/StatCard';
+import { Button } from '../components/ui/Button';
+import { Badge } from '../components/ui/Badge';
 
 export default function Dashboard() {
-  const stats = [
-    { label: 'Applications Sent', value: '1,452', change: '+12%', icon: Send, color: 'text-blue-500' },
-    { label: 'Interviews Scheduled', value: '18', change: '+2', icon: CheckCircle2, color: 'text-green-500' },
-    { label: 'Time Saved', value: '124 hrs', change: 'This month', icon: Clock, color: 'text-purple-500' },
-  ];
-
-  const recentApplications = [
-    { company: 'Google', role: 'Senior Frontend Engineer', status: 'Applied', date: '2h ago' },
-    { company: 'Stripe', role: 'Fullstack Developer', status: 'Interview', date: '1d ago' },
-    { company: 'Linear', role: 'Product Engineer', status: 'Applied', date: '2d ago' },
-    { company: 'Vercel', role: 'Software Engineer', status: 'Rejected', date: '3d ago' },
-  ];
+  const { stats, recentApplications } = useAppSelector(state => state.dashboard);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -31,29 +25,21 @@ export default function Dashboard() {
         </div>
         
         <div className="relative z-10 flex gap-4 w-full md:w-auto">
-          <button className="fluid-btn-secondary w-full md:w-auto">Review Matches</button>
-          <button className="fluid-btn-primary w-full md:w-auto shadow-[var(--ambient-shadow)]">Start AutoApply</button>
+          <Button variant="secondary" className="w-full md:w-auto">Review Matches</Button>
+          <Button variant="primary" className="w-full md:w-auto shadow-[var(--ambient-shadow)]">Start AutoApply</Button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat, i) => (
-          <div key={i} className="fluid-card p-6 border border-transparent">
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-xl bg-[var(--surface-container-high)] ${stat.color}`}>
-                <stat.icon className="w-6 h-6" />
-              </div>
-              <span className="text-sm font-semibold text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-1 rounded-full">
-                {stat.change}
-              </span>
-            </div>
-            <p className="text-[var(--on-surface-variant)] text-sm uppercase tracking-wider font-semibold mb-1">
-              {stat.label}
-            </p>
-            <p className="text-3xl font-bold text-[var(--on-surface)]">
-              {stat.value}
-            </p>
-          </div>
+          <StatCard
+            key={i}
+            label={stat.label}
+            value={stat.value}
+            change={stat.change}
+            iconName={stat.iconName}
+            color={stat.color}
+          />
         ))}
       </div>
 
@@ -84,13 +70,15 @@ export default function Dashboard() {
                   {app.role}
                 </div>
                 <div>
-                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                    app.status === 'Applied' ? 'bg-blue-500/10 text-blue-500' :
-                    app.status === 'Interview' ? 'bg-green-500/10 text-green-500' :
-                    'bg-red-500/10 text-red-500'
-                  }`}>
+                  <Badge 
+                    variant={
+                      app.status === 'Applied' ? 'primary' : 
+                      app.status === 'Interview' ? 'success' : 
+                      'danger'
+                    }
+                  >
                     {app.status}
-                  </span>
+                  </Badge>
                 </div>
                 <div className="text-right text-[var(--on-surface-variant)] flex items-center justify-end gap-2">
                   {app.date}
