@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #f7f9fb;
+    --on-background: #191c1e;
+    --surface: #f7f9fb;
+    --surface-bright: #f7f9fb;
+    --surface-container: #eceef0;
+    --surface-container-high: #e6e8ea;
+    --surface-container-highest: #e0e3e5;
+    --surface-container-low: #f2f4f6;
+    --surface-container-lowest: #ffffff;
+    --surface-dim: #d8dadc;
+    --surface-tint: #4d44e3;
+    --surface-variant: #e0e3e5;
+    --on-surface: #191c1e;
+    --on-surface-variant: #464555;
+    --inverse-surface: #2d3133;
+    --inverse-on-surface: #eff1f3;
+    --primary: #3525cd;
+    --on-primary: #ffffff;
+    --primary-container: #4f46e5;
+    --on-primary-container: #dad7ff;
+    --secondary: #58579b;
+    --on-secondary: #ffffff;
+    --secondary-container: #b6b4ff;
+    --on-secondary-container: #454386;
+    --tertiary: #7e3000;
+    --on-tertiary: #ffffff;
+    --tertiary-container: #a44100;
+    --on-tertiary-container: #ffd2be;
+    --error: #ba1a1a;
+    --on-error: #ffffff;
+    --error-container: #ffdad6;
+    --on-error-container: #93000a;
+    --outline: #777587;
+    --outline-variant: #c7c4d8;
+    
+    --ambient-shadow: 0 20px 25px -5px rgba(77, 68, 227, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  }
+
+  .dark {
+    --background: #111315;
+    --on-background: #e1e3e5;
+    --surface: #111315;
+    --surface-bright: #37393b;
+    --surface-container: #1d1f21;
+    --surface-container-high: #272a2c;
+    --surface-container-highest: #323537;
+    --surface-container-low: #191c1e;
+    --surface-container-lowest: #0c0e0f;
+    --surface-dim: #111315;
+    --surface-tint: #c3c0ff;
+    --surface-variant: #464555;
+    --on-surface: #e1e3e5;
+    --on-surface-variant: #c7c4d8;
+    --inverse-surface: #e1e3e5;
+    --inverse-on-surface: #2d3133;
+    --primary: #c3c0ff;
+    --on-primary: #0f0069;
+    --primary-container: #3525cd;
+    --on-primary-container: #e2dfff;
+    --secondary: #c3c0ff;
+    --on-secondary: #140f54;
+    --secondary-container: #413f82;
+    --on-secondary-container: #e2dfff;
+    --tertiary: #ffb695;
+    --on-tertiary: #351000;
+    --tertiary-container: #7b2f00;
+    --on-tertiary-container: #ffdbcc;
+    --error: #ffb4ab;
+    --on-error: #690005;
+    --error-container: #93000a;
+    --on-error-container: #ffdad6;
+    --outline: #918f02;
+    --outline-variant: #464555;
+    
+    --ambient-shadow: 0 20px 25px -5px rgba(195, 192, 255, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--outline-variant);
+  }
+  body {
+    @apply bg-[var(--background)] text-[var(--on-background)] font-sans antialiased;
+  }
+}
+
+@layer components {
+  .fluid-card {
+    @apply bg-[var(--surface-container-lowest)] rounded-2xl shadow-[var(--ambient-shadow)];
+  }
+  .fluid-input {
+    @apply bg-[var(--surface-container-high)] text-[var(--on-surface)] rounded-md px-4 py-2 border border-transparent focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] outline-none transition-all;
+  }
+  .fluid-btn-primary {
+    @apply bg-gradient-to-br from-[var(--primary)] to-[var(--primary-container)] text-[var(--on-primary)] rounded-full px-6 py-2 font-medium hover:opacity-90 transition-opacity;
+  }
+  .fluid-btn-secondary {
+    @apply bg-[var(--surface-container-high)] text-[var(--primary)] rounded-full px-6 py-2 font-medium hover:bg-[var(--surface-container-highest)] transition-colors;
+  }
+  .fluid-btn-tertiary {
+    @apply text-[var(--on-surface-variant)] rounded-full px-4 py-2 font-medium hover:bg-[var(--surface-container-low)] transition-colors;
+  }
+}
