@@ -1,0 +1,7 @@
+pandas
+regex
+bs4
+pydantic
+requests
+tls_client
+markdownify
