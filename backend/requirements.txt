@@ -7,3 +7,4 @@ tls_client
 markdownify
 fastapi
 uvicorn
+pydantic-settings
