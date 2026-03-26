@@ -13,13 +13,13 @@ interface JobSourcesState {
 const initialState: JobSourcesState = {
   sources: [
     { id: 'linkedin', name: 'linkedin', active: true },
-    { id: 'indeed', name: 'indeed', active: false },
-    { id: 'zip_recruiter', name: 'zip_recruiter', active: true },
+    /*{ id: 'indeed', name: 'indeed', active: false },
+    { id: 'zip_recruiter', name: 'zip_recruiter', active: false },
     { id: 'google', name: 'google', active: false },
     { id: 'glassdoor', name: 'glassdoor', active: false },
     { id: 'bayt', name: 'bayt', active: false },
     { id: 'naukri', name: 'naukri', active: false },
-    { id: 'bdjobs', name: 'bdjobs', active: false },
+    { id: 'bdjobs', name: 'bdjobs', active: false },*/
   ]
 };
 

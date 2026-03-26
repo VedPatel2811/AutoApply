@@ -11,8 +11,8 @@ interface JobSearchState {
 const initialState: JobSearchState = {
   searchTerm: '',
   location: '',
-  country: 'United States',
-  resultsWanted: '50',
+  country: 'Canada',
+  resultsWanted: '5',
   hoursOld: '24'
 };
 
@@ -28,8 +28,8 @@ const jobSearchSlice = createSlice({
     resetSearch: (state) => {
         state.searchTerm = '';
         state.location = '';
-        state.country = 'United States';
-        state.resultsWanted = '50';
+        state.country = 'Canada';
+        state.resultsWanted = '5';
         state.hoursOld = '24';
     }
   }
