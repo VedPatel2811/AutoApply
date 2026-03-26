@@ -2,6 +2,7 @@
 import { Check, RefreshCw } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { toggleSource } from '../store/slices/jobSourcesSlice';
+import { fetchJobs } from '../store/slices/jobResultsSlice';
 import { 
   setSearchTerm, 
   setLocation, 
@@ -19,6 +20,19 @@ export default function UserDashboard() {
   const dispatch = useAppDispatch();
   const sources = useAppSelector(state => state.jobSources.sources);
   const searchParams = useAppSelector(state => state.jobSearch);
+  const { jobs, total, loading, error } = useAppSelector(state => state.jobResults);
+
+  const handleSearch = () => {
+    const activeSources = sources.filter(s => s.active).map(s => s.name);
+    dispatch(fetchJobs({
+      site_name: activeSources,
+      search_term: searchParams.searchTerm,
+      location: searchParams.location,
+      results_wanted: Number(searchParams.resultsWanted),
+      hours_old: Number(searchParams.hoursOld),
+      country_indeed: searchParams.country,
+    }));
+  };
 
   return (
     <div className="w-full max-w-7xl mx-auto px-8 py-10 space-y-12 pb-24 animate-in fade-in duration-500">
@@ -89,13 +103,11 @@ export default function UserDashboard() {
               />
               <Input
                 label="RESULTS_WANTED"
-                defaultValue="50"
                 value={searchParams.resultsWanted}
                 onChange={(e) => dispatch(setResultsWanted(e.target.value))}
               />
               <Input
                 label="HOURS_OLD"
-                defaultValue="24"
                 value={searchParams.hoursOld}
                 onChange={(e) => dispatch(setHoursOld(e.target.value))}
               />
@@ -105,8 +117,8 @@ export default function UserDashboard() {
               <Button variant="ghost" onClick={() => dispatch(resetSearch())}>
                 Reset
               </Button>
-              <Button variant="primary" className="px-8 py-3">
-                Search Jobs
+              <Button variant="primary" className="px-8 py-3" onClick={handleSearch} disabled={loading}>
+                {loading ? 'Searching...' : 'Search Jobs'}
               </Button>
             </div>
           </div>
@@ -136,26 +148,25 @@ export default function UserDashboard() {
           </div>
           
           <div className="space-y-1">
-            <JobCard
-              title="Senior Product Designer"
-              type="Full-time • Remote Friendly"
-              company="InnovateTech Corp."
-              location="San Francisco, CA"
-              source="LinkedIn"
-              datePosted="2h ago"
-            />
-            <JobCard
-              title="Lead UI/UX Architect"
-              type="Contract • Hybrid"
-              company="Nexus Design Lab"
-              location="Austin, TX"
-              source="Indeed"
-              datePosted="5h ago"
-            />
+            {error && <p className="px-4 py-3 text-sm text-red-500">{error}</p>}
+            {jobs.map(job => (
+              <JobCard
+                key={job.id}
+                title={job.title}
+                type={[
+                  job.job_type ?? 'Full-time',
+                  job.is_remote ? 'Remote' : null,
+                ].filter(Boolean).join(' • ')}
+                company={job.company}
+                location={job.location}
+                source={job.site}
+                datePosted={job.date_posted ?? ''}
+              />
+            ))}
           </div>
 
           <div className="flex items-center justify-between px-4 py-6 mt-4">
-            <span className="text-sm text-[var(--on-surface-variant)]">Showing 2 of 24 results found</span>
+            <span className="text-sm text-[var(--on-surface-variant)]">Showing {jobs.length} of {total} results found</span>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" className="w-8 h-8 px-0 rounded-full flex items-center justify-center">
                 <span className="sr-only">Previous</span>
