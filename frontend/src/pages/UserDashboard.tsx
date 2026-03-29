@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Check, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { toggleSource } from '../store/slices/jobSourcesSlice';
