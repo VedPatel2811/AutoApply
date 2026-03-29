@@ -17,6 +17,7 @@ interface JobResultsState {
   total: number;
   loading: boolean;
   error: string | null;
+  searched: boolean;
 }
 
 const initialState: JobResultsState = {
@@ -24,6 +25,7 @@ const initialState: JobResultsState = {
   total: 0,
   loading: false,
   error: null,
+  searched: false,
 };
 
 export const fetchJobs = createAsyncThunk(
@@ -36,7 +38,7 @@ export const fetchJobs = createAsyncThunk(
     hours_old: number;
     country_indeed: string;
   }) => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/jobs/scrape`, {
+    const res = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/v1/jobs/scrape`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -55,6 +57,7 @@ const jobResultsSlice = createSlice({
       .addCase(fetchJobs.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.searched = true;
       })
       .addCase(fetchJobs.fulfilled, (state, action) => {
         state.loading = false;
