@@ -14,7 +14,7 @@ export interface JobSourcesState {
 const initialState: JobSourcesState = {
   sources: [
     { id: 'linkedin',      name: 'linkedin',      active: true  },
-    { id: 'indeed',        name: 'indeed',        active: false, comingSoon: true },
+    { id: 'indeed',        name: 'indeed',        active: false },
     { id: 'zip_recruiter', name: 'zip_recruiter', active: false, comingSoon: true },
     { id: 'google',        name: 'google',        active: false, comingSoon: true },
     { id: 'glassdoor',     name: 'glassdoor',     active: false, comingSoon: true },
