@@ -9,7 +9,7 @@ import pandas as pd
 #from jobspy.bdjobs import BDJobs
 #from jobspy.glassdoor import Glassdoor
 #from jobspy.google import Google
-#from jobspy.indeed import Indeed
+from app.scrapers.indeed import Indeed
 from app.scrapers.linkedin import LinkedIn
 #from jobspy.naukri import Naukri
 from app.scrapers.model import JobType, Location, JobResponse, Country
@@ -49,7 +49,7 @@ def scrape_jobs(
     """
     SCRAPER_MAPPING = {
         Site.LINKEDIN: LinkedIn,
-        #Site.INDEED: Indeed,
+        Site.INDEED: Indeed,
         #Site.ZIP_RECRUITER: ZipRecruiter,
         #Site.GLASSDOOR: Glassdoor,
         #Site.GOOGLE: Google,
