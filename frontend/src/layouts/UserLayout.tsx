@@ -43,7 +43,7 @@ export default function UserLayout() {
           <Link to="/signup" className="text-sm font-medium bg-[var(--surface-container-high)] text-[var(--primary)] hover:bg-[var(--surface-container-highest)] px-4 py-2 rounded-full transition-colors">
             Sign Up
           </Link>
-          <button className="text-sm font-medium text-[var(--on-primary)] bg-[var(--primary-container)] px-4 py-2 rounded-full shadow-[var(--ambient-shadow)] hover:opacity-90 transition-opacity">
+          <button className="text-sm font-medium text-[var(--on-primary)] bg-[var(--primary)] px-4 py-2 rounded-full shadow-[var(--ambient-shadow)] hover:opacity-90 transition-opacity">
             Upgrade
           </button>
           
@@ -61,7 +61,7 @@ export default function UserLayout() {
       {/* Footer */}
       <footer className="border-t border-[var(--outline-variant)]/20 bg-[var(--surface-container-lowest)] py-6 px-8 mt-auto">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs text-[var(--on-surface-variant)] font-semibold tracking-wider uppercase">
-          <p>© 2024 AUTOAPPLY. THE INVISIBLE CONCIERGE.</p>
+          <p>© 2026 AUTOAPPLY. THE INVISIBLE CONCIERGE.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <a href="#" className="hover:text-[var(--on-surface)] transition-colors">PRIVACY</a>
             <a href="#" className="hover:text-[var(--on-surface)] transition-colors">TERMS</a>
