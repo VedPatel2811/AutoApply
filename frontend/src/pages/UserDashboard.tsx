@@ -68,12 +68,12 @@ export default function UserDashboard() {
     setPage(0);
     const activeSources = sources.filter((s: JobSource) => s.active).map((s: JobSource) => s.name);
     dispatch(fetchJobs({
-      site_name: activeSources,
-      search_term: searchParams.searchTerm,
-      location: searchParams.location,
-      results_wanted: Number(searchParams.resultsWanted),
-      hours_old: Number(searchParams.hoursOld),
-      country_indeed: searchParams.country,
+      site_name: activeSources.length ? activeSources : ['linkedin'],
+      search_term: searchParams.searchTerm.trim() || 'Software Engineer',
+      location: searchParams.location.trim() || 'Toronto, ON',
+      results_wanted: Number(searchParams.resultsWanted) || 5,
+      hours_old: Number(searchParams.hoursOld) || 24,
+      country_indeed: searchParams.country || 'Canada',
     }));
   };
 
@@ -131,13 +131,13 @@ export default function UserDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input
                 label="SEARCH_TERM"
-                placeholder="e.g. Senior UX Designer"
+                placeholder="e.g. Software Engineer"
                 value={searchParams.searchTerm}
                 onChange={(e) => dispatch(setSearchTerm(e.target.value))}
               />
               <Input
                 label="LOCATION"
-                placeholder="e.g. Remote, New York"
+                placeholder="e.g. Toronto, ON"
                 value={searchParams.location}
                 onChange={(e) => dispatch(setLocation(e.target.value))}
               />
