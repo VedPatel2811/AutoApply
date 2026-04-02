@@ -7,6 +7,7 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import UserDashboard from './pages/UserDashboard';
+import GroqGuide from './pages/GroqGuide';
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
           </Route>
+
+          <Route path="/groq-guide" element={<GroqGuide />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
