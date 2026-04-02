@@ -4,12 +4,14 @@ interface Job {
   id: string;
   site: string;
   job_url: string;
+  job_url_direct: string | null;
   title: string;
   company: string;
   location: string;
   date_posted: string | null;
   job_type: string | null;
   is_remote: boolean;
+  description: string | null;
 }
 
 interface JobResultsState {
