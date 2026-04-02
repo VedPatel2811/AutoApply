@@ -16,6 +16,9 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { JobCard, COL_WIDTHS } from '../components/ui/JobCard';
+import { useResumeFlow } from '../components/resume/useResumeFlow';
+import { UploadResumeModal } from '../components/resume/UploadResumeModal';
+import { ResumeSelectionModal } from '../components/resume/ResumeSelectionModal';
 
 const HEADERS: { label: string; width: string; align?: 'right' }[] = [
   { label: 'JOB TITLE',   width: COL_WIDTHS.title },
@@ -23,6 +26,7 @@ const HEADERS: { label: string; width: string; align?: 'right' }[] = [
   { label: 'LOCATION',    width: COL_WIDTHS.location },
   { label: 'SOURCE',      width: COL_WIDTHS.source },
   { label: 'DATE POSTED', width: COL_WIDTHS.datePosted },
+  { label: 'RESUME',      width: COL_WIDTHS.resume },
   { label: 'ACTION',      width: COL_WIDTHS.action, align: 'right' },
 ];
 
@@ -59,6 +63,7 @@ export default function UserDashboard() {
   const sources = useAppSelector((state: { jobSources: { sources: JobSource[] } }) => state.jobSources.sources);
   const searchParams = useAppSelector(state => state.jobSearch);
   const { jobs, total, loading, error, searched } = useAppSelector(state => state.jobResults);
+  const { state: resumeFlow, trigger: triggerResume, setTempResume, advanceToSelect, close: closeResume } = useResumeFlow();
 
   const [page, setPage] = useState(0);
   const totalPages = Math.ceil(jobs.length / PAGE_SIZE);
@@ -223,6 +228,7 @@ export default function UserDashboard() {
                 datePosted={job.date_posted ?? ''}
                 jobUrl={job.job_url_direct ?? job.job_url}
                 description={job.description ?? undefined}
+                onCreateResume={() => triggerResume(job.title, job.description ?? '', job.company)}
               />
             ))}
 
@@ -263,6 +269,25 @@ export default function UserDashboard() {
 
           </div>
         </div>
+      )}
+
+      {resumeFlow.step === 'upload' && (
+        <UploadResumeModal
+          onDone={advanceToSelect}
+          onClose={closeResume}
+        />
+      )}
+
+      {resumeFlow.step === 'select' && (
+        <ResumeSelectionModal
+          jobTitle={resumeFlow.jobTitle}
+          jobDescription={resumeFlow.jobDescription}
+          companyName={resumeFlow.companyName}
+          tempResumeText={resumeFlow.tempResumeText}
+          tempResumeFilename={resumeFlow.tempResumeFilename}
+          onSetTemp={setTempResume}
+          onClose={closeResume}
+        />
       )}
 
     </div>

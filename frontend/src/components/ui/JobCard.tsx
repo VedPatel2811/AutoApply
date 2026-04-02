@@ -11,14 +11,16 @@ export interface JobCardProps {
   type?: string;
   jobUrl?: string;
   description?: string;
+  onCreateResume?: () => void;
 }
 
 export const COL_WIDTHS = {
-  title:      '25%',
-  company:    '18%',
-  location:   '18%',
-  source:     '12%',
-  datePosted: '15%',
+  title:      '22%',
+  company:    '15%',
+  location:   '15%',
+  source:     '10%',
+  datePosted: '13%',
+  resume:     '13%',
   action:     '12%',
 };
 
@@ -31,6 +33,7 @@ export const JobCard: React.FC<JobCardProps> = ({
   type = 'Full-time',
   jobUrl,
   description,
+  onCreateResume,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -58,6 +61,14 @@ export const JobCard: React.FC<JobCardProps> = ({
         </div>
         <div style={{ width: COL_WIDTHS.datePosted }} className="pr-4 min-w-0 text-sm text-[var(--on-surface-variant)] truncate">
           {datePosted}
+        </div>
+        <div style={{ width: COL_WIDTHS.resume }} className="pr-4 min-w-0">
+          <button
+            onClick={e => { e.stopPropagation(); onCreateResume?.(); }}
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 text-violet-400 border border-violet-500/30 hover:from-violet-500/30 hover:to-fuchsia-500/30 transition-all whitespace-nowrap"
+          >
+            ✦ Create Resume
+          </button>
         </div>
         <div style={{ width: COL_WIDTHS.action }} className="flex justify-end items-center gap-2 flex-shrink-0">
           {description && (

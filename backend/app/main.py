@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.endpoints.jobs import router as jobs_router
+from app.api.v1.endpoints.resume import router as resume_router
 from app.config import settings
 
 app = FastAPI(title="AutoApply API")
@@ -13,3 +14,4 @@ app.add_middleware(
 )
 
 app.include_router(jobs_router, prefix="/api/v1/jobs")
+app.include_router(resume_router, prefix="/api/v1/resume")
