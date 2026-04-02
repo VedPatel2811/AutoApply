@@ -221,6 +221,8 @@ export default function UserDashboard() {
                 location={job.location}
                 source={job.site}
                 datePosted={job.date_posted ?? ''}
+                jobUrl={job.job_url_direct ?? job.job_url}
+                description={job.description ?? undefined}
               />
             ))}
 
