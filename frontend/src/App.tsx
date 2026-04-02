@@ -26,6 +26,8 @@ function App() {
             <Route path="applications" element={<div className="text-[var(--on-surface-variant)] text-center mt-20">Applications Feature Coming Soon</div>} />
             <Route path="settings" element={<div className="text-[var(--on-surface-variant)] text-center mt-20">Settings Feature Coming Soon</div>} />
           </Route>
+
+          <Route path="/groq-guide" element={<GroqGuide />} />
           
           {/* Auth pages kept but not required to access dashboard */}
           <Route element={<AuthLayout />}>
