@@ -8,3 +8,6 @@ markdownify
 fastapi
 uvicorn
 pydantic-settings
+pypdf
+python-docx
+python-multipart
