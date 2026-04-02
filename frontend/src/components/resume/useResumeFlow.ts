@@ -6,6 +6,7 @@ export interface ResumeFlowState {
   step: ResumeFlowStep;
   jobTitle: string;
   jobDescription: string;
+  companyName: string;
   tempResumeText: string | null;
   tempResumeFilename: string | null;
 }
@@ -14,6 +15,7 @@ const INITIAL: ResumeFlowState = {
   step: 'idle',
   jobTitle: '',
   jobDescription: '',
+  companyName: '',
   tempResumeText: null,
   tempResumeFilename: null,
 };
@@ -21,7 +23,7 @@ const INITIAL: ResumeFlowState = {
 export function useResumeFlow() {
   const [state, setState] = useState<ResumeFlowState>(INITIAL);
 
-  const trigger = (jobTitle: string, jobDescription: string) => {
+  const trigger = (jobTitle: string, jobDescription: string, companyName: string) => {
     const apiKey = localStorage.getItem('groq_api_key');
     if (!apiKey) {
       window.open('/groq-guide', '_blank');
@@ -32,6 +34,7 @@ export function useResumeFlow() {
       step: resumeText ? 'select' : 'upload',
       jobTitle,
       jobDescription,
+      companyName,
       tempResumeText: null,
       tempResumeFilename: null,
     });

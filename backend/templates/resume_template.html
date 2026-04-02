@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<style>
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #1a1a1a;
+    line-height: 1.5;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+  }
+  .header h1 { font-size: 20px; font-weight: bold; color: #1a1a1a; }
+  .header .role { font-size: 12px; color: #2563eb; font-weight: bold; margin-top: 2px; }
+  .header .contact { margin-top: 4px; font-size: 10px; color: #444; }
+  .header .contact span { margin-right: 14px; }
+
+  /* Section */
+  .section { margin-bottom: 12px; }
+  .section-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #dbeafe;
+    padding-bottom: 2px;
+    margin-bottom: 7px;
+  }
+
+  /* Summary */
+  .summary p { font-size: 11px; color: #333; }
+
+  /* Experience */
+  .exp-item { margin-bottom: 9px; }
+  .exp-role { font-weight: bold; font-size: 11px; }
+  .exp-company { font-size: 11px; color: #444; }
+  .exp-duration { font-size: 10px; color: #666; }
+  .exp-bullets { margin-top: 3px; padding-left: 14px; }
+  .exp-bullets li { margin-bottom: 2px; font-size: 11px; }
+  .exp-bullets li.suggested { color: #2563eb; }
+
+  /* Skills */
+  .skill-tag {
+    display: inline-block;
+    background: #eff6ff;
+    color: #1e40af;
+    border-radius: 3px;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 500;
+    margin: 2px 3px 2px 0;
+  }
+  .skill-tag.missing {
+    background: #f0fdf4;
+    color: #166534;
+  }
+
+  /* Education */
+  .edu-item { margin-bottom: 6px; }
+  .edu-degree { font-weight: bold; font-size: 11px; }
+  .edu-meta { font-size: 10px; color: #555; }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>{{CANDIDATE_NAME}}</h1>
+    <div class="role">{{TARGET_ROLE}}</div>
+    <div class="contact">
+      <span>{{CANDIDATE_EMAIL}}</span>
+      <span>{{CANDIDATE_PHONE}}</span>
+      <span>{{CANDIDATE_LINKEDIN}}</span>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="section summary">
+    <div class="section-title">Professional Summary</div>
+    <p>{{CANDIDATE_SUMMARY}}</p>
+  </div>
+
+  <!-- Experience -->
+  <div class="section">
+    <div class="section-title">Experience</div>
+    {{EXPERIENCE_SECTION}}
+  </div>
+
+  <!-- Skills -->
+  <div class="section">
+    <div class="section-title">Skills</div>
+    {{EXISTING_SKILLS}}
+    {{MISSING_SKILLS}}
+  </div>
+
+  <!-- Education -->
+  <div class="section">
+    <div class="section-title">Education</div>
+    {{EDUCATION_SECTION}}
+  </div>
+
+</body>
+</html>

@@ -228,7 +228,7 @@ export default function UserDashboard() {
                 datePosted={job.date_posted ?? ''}
                 jobUrl={job.job_url_direct ?? job.job_url}
                 description={job.description ?? undefined}
-                onCreateResume={() => triggerResume(job.title, job.description ?? '')}
+                onCreateResume={() => triggerResume(job.title, job.description ?? '', job.company)}
               />
             ))}
 
@@ -281,13 +281,11 @@ export default function UserDashboard() {
       {resumeFlow.step === 'select' && (
         <ResumeSelectionModal
           jobTitle={resumeFlow.jobTitle}
+          jobDescription={resumeFlow.jobDescription}
+          companyName={resumeFlow.companyName}
           tempResumeText={resumeFlow.tempResumeText}
           tempResumeFilename={resumeFlow.tempResumeFilename}
           onSetTemp={setTempResume}
-          onGenerate={(resumeText) => {
-            console.log('Generate resume for:', resumeFlow.jobTitle, resumeText.slice(0, 100));
-            closeResume();
-          }}
           onClose={closeResume}
         />
       )}

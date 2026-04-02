@@ -8,6 +8,9 @@ markdownify
 fastapi
 uvicorn
 pydantic-settings
-pypdf
+pdfplumber
 python-docx
 python-multipart
+weasyprint
+xhtml2pdf
+groq
