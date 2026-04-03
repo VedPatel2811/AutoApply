@@ -11,6 +11,5 @@ pydantic-settings
 pdfplumber
 python-docx
 python-multipart
-weasyprint
-xhtml2pdf
 groq
+reportlab

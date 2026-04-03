@@ -1,6 +1,9 @@
 import io
 import json
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import StreamingResponse
@@ -72,6 +75,18 @@ def _safe_json(raw: str, fallback):
     return fallback
 
 
+def _ascii_safe(text: str) -> str:
+    """Replace common non-ASCII punctuation with ASCII equivalents."""
+    replacements = {
+        "\u2019": "'", "\u2018": "'", "\u201c": '"', "\u201d": '"',
+        "\u2013": "-", "\u2014": "-", "\u2022": "-", "\u00b7": ".",
+        "\u2605": "*", "\u25cf": "*", "\u2764": "", "\u00a0": " ",
+    }
+    for k, v in replacements.items():
+        text = text.replace(k, v)
+    return text.encode("latin-1", errors="replace").decode("latin-1")
+
+
 def _groq_chat(client, prompt: str) -> str:
     response = client.chat.completions.create(
         model="meta-llama/llama-4-scout-17b-16e-instruct",
@@ -137,18 +152,18 @@ def _build_pdf(candidate: dict, payload: GenerateResumeRequest,
                                 color=HexColor("#dbeafe"), spaceAfter=5))
 
     # ── Header ──
-    story.append(Paragraph(candidate.get("name", ""), s_name))
-    story.append(Paragraph(payload.job_title, s_role))
+    story.append(Paragraph(_ascii_safe(candidate.get("name", "")), s_name))
+    story.append(Paragraph(_ascii_safe(payload.job_title), s_role))
     contact_parts = [x for x in [
-        candidate.get("email", ""),
-        candidate.get("phone", ""),
-        candidate.get("linkedin", ""),
+        _ascii_safe(candidate.get("email", "")),
+        _ascii_safe(candidate.get("phone", "")),
+        _ascii_safe(candidate.get("linkedin", "")),
     ] if x]
     story.append(Paragraph("  |  ".join(contact_parts), s_contact))
     hr()
 
     # ── Summary ──
-    summary = candidate.get("summary", "")
+    summary = _ascii_safe(candidate.get("summary", ""))
     if summary:
         section("PROFESSIONAL SUMMARY")
         story.append(Paragraph(summary, s_body))
@@ -158,15 +173,15 @@ def _build_pdf(candidate: dict, payload: GenerateResumeRequest,
     if experience:
         section("EXPERIENCE")
         for i, job in enumerate(experience):
-            story.append(Paragraph(job.get("role", ""), s_bold))
+            story.append(Paragraph(_ascii_safe(job.get("role", "")), s_bold))
             story.append(Paragraph(
-                f"{job.get('company', '')}  ·  {job.get('duration', '')}", s_grey))
+                _ascii_safe(f"{job.get('company', '')}  |  {job.get('duration', '')}"), s_grey))
             bullets = job.get("bullets", [])
             for b in bullets:
-                story.append(Paragraph(f"• {b}", s_bullet))
+                story.append(Paragraph(f"- {_ascii_safe(b)}", s_bullet))
             if i == 0:
                 for sb in suggested_bullets:
-                    story.append(Paragraph(f"★ {sb}", s_suggest))
+                    story.append(Paragraph(f"[+] {_ascii_safe(sb)}", s_suggest))
             story.append(Spacer(1, 5))
 
     # ── Skills ──
@@ -175,11 +190,11 @@ def _build_pdf(candidate: dict, payload: GenerateResumeRequest,
         section("SKILLS")
         if existing:
             story.append(Paragraph(
-                "<b>Skills:</b>  " + "  ·  ".join(existing), s_body))
+                "<b>Skills:</b>  " + "  |  ".join(_ascii_safe(s) for s in existing), s_body))
         if missing_skills:
             story.append(Spacer(1, 3))
             story.append(Paragraph(
-                "<b>Additional:</b>  " + "  ·  ".join(f"● {s}" for s in missing_skills),
+                "<b>Additional:</b>  " + "  |  ".join(f"[+] {_ascii_safe(s)}" for s in missing_skills),
                 style("ms", fontSize=10, textColor=blue_light, leading=14)))
 
     # ── Education ──
@@ -188,9 +203,9 @@ def _build_pdf(candidate: dict, payload: GenerateResumeRequest,
         section("EDUCATION")
         for edu in education:
             year = edu.get("year", "")
-            story.append(Paragraph(edu.get("degree", ""), s_bold))
+            story.append(Paragraph(_ascii_safe(edu.get("degree", "")), s_bold))
             story.append(Paragraph(
-                f"{edu.get('institution', '')}{('  ·  ' + year) if year else ''}", s_grey))
+                _ascii_safe(f"{edu.get('institution', '')}{('  |  ' + year) if year else ''}"), s_grey))
             story.append(Spacer(1, 4))
 
     doc.build(story)
@@ -208,24 +223,28 @@ async def generate_resume(payload: GenerateResumeRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Groq client init failed: {e}")
 
-    def _handle_groq_error(e):
+    def _handle_groq_error(e) -> None:
+        logger.exception("Groq API call failed")
         status = getattr(getattr(e, "response", None), "status_code", 500)
         if status == 429:
             raise HTTPException(status_code=429, detail="Groq API quota exceeded. Try again later.")
-        raise HTTPException(status_code=500, detail="Resume generation failed. Please try again.")
+        raise HTTPException(status_code=500, detail=f"Resume generation failed: {e}")
 
     # CALL 1 — Required skills from JD
+    required_skills: list = []
     try:
         skills_raw = _groq_chat(client,
             f"Extract a list of the top 10 most important technical and soft skills from this job description. "
             f"Return ONLY a JSON array of strings. No explanation.\nJob Description: {payload.job_description}")
-        required_skills: list = _safe_json(skills_raw, [])
+        required_skills = _safe_json(skills_raw, [])
     except HTTPException:
         raise
     except Exception as e:
         _handle_groq_error(e)
 
     # CALL 2 — Missing skills + suggested bullets
+    missing_skills: list = []
+    suggested_bullets: list = []
     try:
         gap_raw = _groq_chat(client,
             f"Compare this resume text with the required skills list. "
@@ -234,14 +253,15 @@ async def generate_resume(payload: GenerateResumeRequest):
             f"'suggested_bullets': array of 2-3 achievement bullet points under 20 words each. "
             f"Required Skills: {json.dumps(required_skills)}\nResume Text: {payload.resume_text}")
         gap_data: dict = _safe_json(gap_raw, {"missing_skills": [], "suggested_bullets": []})
-        missing_skills: list = gap_data.get("missing_skills", [])
-        suggested_bullets: list = gap_data.get("suggested_bullets", [])
+        missing_skills = gap_data.get("missing_skills", [])
+        suggested_bullets = gap_data.get("suggested_bullets", [])
     except HTTPException:
         raise
     except Exception as e:
         _handle_groq_error(e)
 
     # CALL 3 — Candidate info extraction
+    candidate: dict = {}
     try:
         info_raw = _groq_chat(client,
             f"Extract the following fields from this resume text and return ONLY a JSON object with these exact keys: "
@@ -250,7 +270,7 @@ async def generate_resume(payload: GenerateResumeRequest):
             f"'education' (array of objects with degree, institution, year), "
             f"'existing_skills' (array of strings). "
             f"No explanation. No markdown. Return raw JSON only.\nResume Text: {payload.resume_text}")
-        candidate: dict = _safe_json(info_raw, {})
+        candidate = _safe_json(info_raw, {})
     except HTTPException:
         raise
     except Exception as e:
@@ -260,6 +280,7 @@ async def generate_resume(payload: GenerateResumeRequest):
     try:
         pdf_bytes = _build_pdf(candidate, payload, missing_skills, suggested_bullets)
     except Exception as e:
+        logger.exception("PDF generation failed")
         raise HTTPException(status_code=500, detail=f"PDF generation failed: {e}")
 
     safe_company = re.sub(r"[^\w\-]", "_", payload.company_name)
